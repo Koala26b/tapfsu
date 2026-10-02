@@ -580,27 +580,35 @@
       e.preventDefault();
 
       const form = document.getElementById('orderForm');
+      const submitBtn = form.querySelector('.submit-btn');
       const data = new FormData(form);
       const entries = Object.fromEntries(data.entries());
 
-      // ── Send to Google Sheets (optional — replace SCRIPT_URL) ──
-      // Uncomment the block below after setting up a Google Apps Script Web App
-      /*
-      fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL', {
+      // Disable button while sending
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      // Send to Google Sheets
+      fetch('https://script.google.com/macros/s/AKfycbxBExTUkJq2_1_EwRsFN8PoCocNcUbAjDsY89DBlKx1IEB0mPSNhico-ol9SnY1I-so/exec', {
         method: 'POST',
         body: JSON.stringify(entries),
-        headers: { 'Content-Type': 'application/json' }
+        mode: 'no-cors'
+      })
+      .then(() => {
+        // Show success modal
+        document.getElementById('successModal').classList.add('active');
+        form.reset();
+        document.getElementById('orderTotal').textContent = '$0';
+        updateForm();
+      })
+      .catch((error) => {
+        alert('There was an error submitting your order. Please try again!');
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Order 🚀';
       });
-      */
-
-      // For now, log and show confirmation
-      console.log('Order submitted:', entries);
-
-      // Show success modal
-      document.getElementById('successModal').classList.add('active');
-      form.reset();
-      document.getElementById('orderTotal').textContent = '$0';
-      updateForm();
     }
 
     function closeModal() {
