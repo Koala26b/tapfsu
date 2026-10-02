@@ -522,6 +522,8 @@
       </form>
     </div>
   </section>
+  <!-- Hidden iframe for form submission -->
+  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
   <!-- ═══ Success Modal ═══ -->
   <div class="modal-overlay" id="successModal">
@@ -576,6 +578,8 @@
     }
 
     /* ── Form Submission ── */
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxnZUeAPsClA2hFcxVKH7IXWqGLXoGIYCq_iPPO9onT2If4gTh2X0wCm0lgnDYL7rVR/exec';
+
     function handleSubmit(e) {
       e.preventDefault();
 
@@ -588,27 +592,35 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
 
-      // Send to Google Sheets
-      fetch('https://script.google.com/macros/s/AKfycbxBExTUkJq2_1_EwRsFN8PoCocNcUbAjDsY89DBlKx1IEB0mPSNhico-ol9SnY1I-so/exec', {
-        method: 'POST',
-        body: JSON.stringify(entries),
-        mode: 'no-cors'
-      })
-      .then(() => {
-        // Show success modal
+      // Create a temporary hidden form that POSTs to the iframe
+      var tempForm = document.createElement('form');
+      tempForm.method = 'POST';
+      tempForm.action = SCRIPT_URL;
+      tempForm.target = 'hidden_iframe';
+      tempForm.style.display = 'none';
+
+      // Add all form data as hidden inputs
+      for (var key in entries) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = entries[key];
+        tempForm.appendChild(input);
+      }
+
+      document.body.appendChild(tempForm);
+      tempForm.submit();
+      document.body.removeChild(tempForm);
+
+      // Show success after a short delay (iframe POST has no callback)
+      setTimeout(function() {
         document.getElementById('successModal').classList.add('active');
         form.reset();
         document.getElementById('orderTotal').textContent = '$0';
-        updateForm();
-      })
-      .catch((error) => {
-        alert('There was an error submitting your order. Please try again!');
-        console.error('Error:', error);
-      })
-      .finally(() => {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Order 🚀';
-      });
+        updateForm();
+      }, 1500);
     }
 
     function closeModal() {
