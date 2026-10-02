@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TapFSU — NFC Smart Cards for FSU Students</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ───── Reset & Base ───── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --garnet: #782F40;
+      --garnet-dark: #5c1e2f;
+      --gold: #CEB888;
+      --gold-light: #e8dcc4;
+      --bg: #0c0c0f;
+      --card-bg: #151519;
+      --card-border: #2a2a30;
+      --text: #e8e8ec;
+      --text-muted: #9a9aa8;
+      --white: #ffffff;
+      --success: #22c55e;
+      --radius: 16px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ───── Nav ───── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12,12,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-weight: 800; font-size: 1.4rem;
+      background: linear-gradient(135deg, var(--gold), var(--garnet));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.9rem; font-weight: 500; color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      background: var(--garnet); color: var(--white) !important;
+      padding: 0.5rem 1.25rem; border-radius: 8px;
+      font-weight: 600; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--garnet-dark); }
+
+    /* ───── Hero ───── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(120,47,64,0.25), transparent),
+        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(206,184,136,0.1), transparent);
+    }
+    .hero-content { max-width: 750px; }
+    .badge {
+      display: inline-block;
+      background: rgba(206,184,136,0.12); border: 1px solid rgba(206,184,136,0.25);
+      color: var(--gold); padding: 0.35rem 1rem; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--gold), #f0d89a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem; color: var(--text-muted);
+      max-width: 550px; margin: 0 auto 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem; border-radius: 10px;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.25s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--garnet), var(--garnet-dark));
+      color: var(--white); box-shadow: 0 4px 24px rgba(120,47,64,0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(120,47,64,0.5); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1.5px solid var(--card-border);
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ───── Section Utility ───── */
+    section { padding: 5rem 2rem; }
+    .section-header {
+      text-align: center; max-width: 600px; margin: 0 auto 3.5rem;
+    }
+    .section-header h2 {
+      font-size: 2.2rem; font-weight: 800; margin-bottom: 0.75rem;
+    }
+    .section-header p { color: var(--text-muted); font-size: 1.05rem; }
+
+    /* ───── How It Works ───── */
+    .how-it-works { background: var(--bg); }
+    .steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem; max-width: 1000px; margin: 0 auto;
+    }
+    .step {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 2rem; text-align: center;
+      transition: border-color 0.3s;
+    }
+    .step:hover { border-color: var(--gold); }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(120,47,64,0.15); color: var(--garnet);
+      font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;
+      border: 1px solid rgba(120,47,64,0.3);
+    }
+    .step h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* ───── Pricing ───── */
+    #pricing { background: linear-gradient(180deg, var(--bg), #0f0f13); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 2rem; max-width: 1050px; margin: 0 auto;
+    }
+    .price-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 2.5rem 2rem;
+      position: relative; transition: border-color 0.3s, transform 0.3s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.featured {
+      border-color: var(--gold);
+      box-shadow: 0 0 60px rgba(206,184,136,0.08);
+    }
+    .price-card.featured::before {
+      content: '🔥 MOST POPULAR';
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--gold), #d4b96e);
+      color: var(--bg); font-size: 0.7rem; font-weight: 700;
+      padding: 0.3rem 1rem; border-radius: 100px;
+      letter-spacing: 0.05em;
+    }
+    .price-card h3 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+    .price-card .price {
+      font-size: 3rem; font-weight: 900; margin: 1rem 0 0.25rem;
+    }
+    .price-card .price-note { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .price-card ul { list-style: none; margin-bottom: 2rem; }
+    .price-card li {
+      padding: 0.45rem 0; font-size: 0.92rem; color: var(--text-muted);
+      display: flex; align-items: flex-start; gap: 0.6rem;
+    }
+    .price-card li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+    .price-card .btn { width: 100%; justify-content: center; }
+    .save-tag {
+      display: inline-block; background: rgba(34,197,94,0.12);
+      color: var(--success); font-size: 0.75rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 4px; margin-left: 0.5rem;
+    }
+
+    /* ───── Order Form ───── */
+    #order {
+      background: var(--bg);
+      padding-bottom: 6rem;
+    }
+    .form-container {
+      max-width: 680px; margin: 0 auto;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 3rem 2.5rem;
+    }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label {
+      display: block; font-weight: 600; font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+    .form-group .hint {
+      display: block; font-size: 0.78rem; color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 0.75rem 1rem;
+      background: var(--bg); border: 1.5px solid var(--card-border);
+      border-radius: 10px; color: var(--text);
+      font-family: inherit; font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none; border-color: var(--gold);
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-group select { cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9aa8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center;
+    }
+    .form-group select option { background: var(--card-bg); color: var(--text); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-divider {
+      border: none; border-top: 1px solid var(--card-border);
+      margin: 2rem 0;
+    }
+    .form-section-title {
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--gold); margin-bottom: 1.25rem;
+    }
+
+    /* order summary */
+    .order-summary {
+      background: rgba(206,184,136,0.06); border: 1px solid rgba(206,184,136,0.15);
+      border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .order-summary .label { font-size: 0.9rem; color: var(--text-muted); }
+    .order-summary .total { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+
+    .submit-btn {
+      width: 100%; padding: 1rem;
+      background: linear-gradient(135deg, var(--garnet), var(--garnet-dark));
+      color: var(--white); border: none; border-radius: 10px;
+      font-family: inherit; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; transition: all 0.25s;
+      box-shadow: 0 4px 24px rgba(120,47,64,0.35);
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(120,47,64,0.5); }
+
+    /* ───── Success Modal ───── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; padding: 2rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 3rem; text-align: center;
+      max-width: 450px; width: 100%;
+      animation: modalPop 0.3s ease;
+    }
+    @keyframes modalPop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal .check {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(34,197,94,0.12); color: var(--success);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin-bottom: 1.5rem;
+    }
+    .modal h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .modal p { color: var(--text-muted); margin-bottom: 2rem; }
+
+    /* ───── Footer ───── */
+    footer {
+      text-align: center; padding: 2.5rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ───── Responsive ───── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-container { padding: 2rem 1.5rem; }
+      section { padding: 3.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Nav ═══ -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">TapFSU ⚡</a>
+      <ul class="nav-links">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#order" class="nav-cta">Order Now</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="badge">📱 Made for FSU Students</div>
+      <h1>Tap. Share. <span>Connect.</span></h1>
+      <p>Custom NFC smart cards that let you instantly share your LinkedIn, Instagram, resume, portfolio — or all of them — with a single tap on any phone.</p>
+      <div class="hero-btns">
+        <a href="#order" class="btn btn-primary">Order Your Card →</a>
+        <a href="#pricing" class="btn btn-outline">See Pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ How It Works ═══ -->
+  <section class="how-it-works" id="how">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>No app needed. Works with every modern iPhone and Android.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Pick Your Card</h3>
+        <p>Choose Black or White, and select Basic or Premium.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Send Your Links</h3>
+        <p>Paste your LinkedIn, Instagram, portfolio, resume — we program it for you.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Tap & Share</h3>
+        <p>Hold the card to any phone. Your link opens instantly — no app needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Pricing ═══ -->
+  <section id="pricing">
+    <div class="section-header">
+      <h2>Simple Pricing</h2>
+      <p>No subscriptions. No hidden fees. Pay once, own it forever.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Basic -->
+      <div class="price-card">
+        <h3>Basic</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;">1 link, 1 card</p>
+        <div class="price">$5</div>
+        <div class="price-note">one-time payment</div>
+        <ul>
+          <li>1 NFC smart card</li>
+          <li>1 direct link (LinkedIn, IG, resume, etc.)</li>
+          <li>Black or White</li>
+          <li>Campus pickup / meetup</li>
+        </ul>
+        <a href="#order" class="btn btn-outline" onclick="selectPackage('basic')">Get Basic →</a>
+      </div>
+      <!-- Premium -->
+      <div class="price-card featured">
+        <h3>Premium</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;">Multi-link, 1 card</p>
+        <div class="price">$7</div>
+        <div class="price-note">one-time payment</div>
+        <ul>
+          <li>1 NFC smart card</li>
+          <li>Multi-link profile (up to 10 links)</li>
+          <li>Custom Linktree-style page</li>
+          <li>Black or White</li>
+          <li>Campus pickup / meetup</li>
+        </ul>
+        <a href="#order" class="btn btn-primary" onclick="selectPackage('premium')">Get Premium →</a>
+      </div>
+      <!-- Duo -->
+      <div class="price-card">
+        <h3>Premium Duo</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;">Multi-link, 2 cards</p>
+        <div class="price">$10 <span class="save-tag">SAVE $4</span></div>
+        <div class="price-note">one-time payment</div>
+        <ul>
+          <li>2 NFC smart cards</li>
+          <li>Multi-link profile on each (up to 10 links)</li>
+          <li>Mix & match colors</li>
+          <li>Best deal — share with a friend</li>
+          <li>Campus pickup / meetup</li>
+        </ul>
+        <a href="#order" class="btn btn-outline" onclick="selectPackage('duo')">Get Duo Deal →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Order Form ═══ -->
+  <section id="order">
+    <div class="section-header">
+      <h2>Place Your Order</h2>
+      <p>Fill out the form below and we'll get your card ready for pickup on campus.</p>
+    </div>
+    <div class="form-container">
+      <form id="orderForm" onsubmit="handleSubmit(event)">
+
+        <!-- Your Info -->
+        <div class="form-section-title">👤 Your Info</div>
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" placeholder="e.g. Marcus Johnson" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" placeholder="you@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="contact">Phone or Instagram *</label>
+            <span class="hint">Best way to reach you for pickup</span>
+            <input type="text" id="contact" name="contact" placeholder="@yourhandle or (850) 555-1234" required />
+          </div>
+        </div>
+
+        <hr class="form-divider" />
+
+        <!-- Card Package -->
+        <div class="form-section-title">📦 Card Package</div>
+        <div class="form-group">
+          <label for="package">Select Package *</label>
+          <select id="package" name="package" required onchange="updateForm()">
+            <option value="" disabled selected>Choose a package…</option>
+            <option value="basic">Basic — $5 (1 link, 1 card)</option>
+            <option value="premium">Premium — $7 (Multi-link, 1 card)</option>
+            <option value="duo">Premium Duo — $10 (Multi-link, 2 cards)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="color1">Card 1 Color *</label>
+            <select id="color1" name="color1" required>
+              <option value="" disabled selected>Choose…</option>
+              <option value="black">Black</option>
+              <option value="white">White</option>
+            </select>
+          </div>
+          <div class="form-group" id="color2Group" style="opacity:0.35; pointer-events:none;">
+            <label for="color2">Card 2 Color</label>
+            <span class="hint">Duo Bundle only</span>
+            <select id="color2" name="color2">
+              <option value="" selected>N/A</option>
+              <option value="black">Black</option>
+              <option value="white">White</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="form-divider" />
+
+        <!-- Links -->
+        <div class="form-section-title">🔗 Links to Encode</div>
+        <div class="form-group">
+          <label for="links">Your Link(s) *</label>
+          <span class="hint" id="linksHint">Paste the URL you want your card to open when tapped.</span>
+          <textarea id="links" name="links" placeholder="https://linkedin.com/in/yourprofile" required></textarea>
+        </div>
+
+        <hr class="form-divider" />
+
+        <!-- Pickup & Payment -->
+        <div class="form-section-title">📍 Pickup & Payment</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pickup">Pickup Location *</label>
+            <select id="pickup" name="pickup" required>
+              <option value="" disabled selected>Choose…</option>
+              <option value="strozier">Strozier Library</option>
+              <option value="dirac">Dirac Science Library</option>
+              <option value="union">FSU Student Union</option>
+              <option value="dorm">Dorm / Greek House</option>
+              <option value="other">Other / Flexible</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="payment">Payment Method *</label>
+            <select id="payment" name="payment" required>
+              <option value="" disabled selected>Choose…</option>
+              <option value="venmo">Venmo</option>
+              <option value="cashapp">Cash App</option>
+              <option value="zelle">Zelle</option>
+              <option value="cash">Cash at Pickup</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="payHandle">Payment Username / Handle *</label>
+          <span class="hint">Your Venmo/CashApp username so we can confirm payment. Type "CASH" if paying in person.</span>
+          <input type="text" id="payHandle" name="payHandle" placeholder="@yourvenmo" required />
+        </div>
+        <div class="form-group">
+          <label for="notes">Special Requests (optional)</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="Anything else we should know?"></textarea>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <span class="label">Order Total</span>
+          <span class="total" id="orderTotal">$0</span>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Order 🚀</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══ Success Modal ═══ -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal">
+      <div class="check">✓</div>
+      <h3>Order Submitted! 🎉</h3>
+      <p>We got your order and will reach out soon to confirm payment and schedule your campus pickup. Check your email / DMs!</p>
+      <a href="#" class="btn btn-primary" onclick="closeModal()">Done</a>
+    </div>
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer>
+    <p>© 2026 TapFSU — NFC Smart Cards for FSU Students</p>
+  </footer>
+
+  <script>
+    /* ── Package select helper ── */
+    function selectPackage(pkg) {
+      document.getElementById('package').value = pkg;
+      updateForm();
+    }
+
+    /* ── Update form based on package ── */
+    function updateForm() {
+      const pkg = document.getElementById('package').value;
+      const color2Group = document.getElementById('color2Group');
+      const linksHint = document.getElementById('linksHint');
+      const totalEl = document.getElementById('orderTotal');
+
+      if (pkg === 'duo') {
+        color2Group.style.opacity = '1';
+        color2Group.style.pointerEvents = 'auto';
+      } else {
+        color2Group.style.opacity = '0.35';
+        color2Group.style.pointerEvents = 'none';
+        document.getElementById('color2').value = '';
+      }
+
+      if (pkg === 'basic') {
+        linksHint.textContent = 'Paste your single URL (LinkedIn, Instagram, portfolio, or resume link).';
+        totalEl.textContent = '$5';
+      } else if (pkg === 'premium') {
+        linksHint.textContent = 'Paste your Linktree URL, or list up to 10 links with labels (e.g., 1. LinkedIn: url, 2. Instagram: url).';
+        totalEl.textContent = '$7';
+      } else if (pkg === 'duo') {
+        linksHint.textContent = 'Paste your Linktree URL, or list up to 10 links with labels. Both cards will share the same link set.';
+        totalEl.textContent = '$10';
+      } else {
+        totalEl.textContent = '$0';
+      }
+    }
+
+    /* ── Form Submission ── */
+    function handleSubmit(e) {
+      e.preventDefault();
+
+      const form = document.getElementById('orderForm');
+      const data = new FormData(form);
+      const entries = Object.fromEntries(data.entries());
+
+      // ── Send to Google Sheets (optional — replace SCRIPT_URL) ──
+      // Uncomment the block below after setting up a Google Apps Script Web App
+      /*
+      fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL', {
+        method: 'POST',
+        body: JSON.stringify(entries),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      */
+
+      // For now, log and show confirmation
+      console.log('Order submitted:', entries);
+
+      // Show success modal
+      document.getElementById('successModal').classList.add('active');
+      form.reset();
+      document.getElementById('orderTotal').textContent = '$0';
+      updateForm();
+    }
+
+    function closeModal() {
+      document.getElementById('successModal').classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>
