@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TapFSU — NFC Smart Cards for FSU Students</title>
+  <title>TapdCard — Smart NFC Business & Social Cards</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -304,7 +304,7 @@
   <!-- ═══ Nav ═══ -->
   <nav>
     <div class="nav-inner">
-      <a href="#" class="logo">TapFSU ⚡</a>
+      <a href="#" class="logo">TapdCard ⚡</a>
       <ul class="nav-links">
         <li><a href="#how">How It Works</a></li>
         <li><a href="#pricing">Pricing</a></li>
@@ -316,7 +316,7 @@
   <!-- ═══ Hero ═══ -->
   <section class="hero">
     <div class="hero-content">
-      <div class="badge">📱 Made for FSU Students</div>
+      <div class="badge">📱 Tap-to-Share NFC Cards</div>
       <h1>Tap. Share. <span>Connect.</span></h1>
       <p>Custom NFC smart cards that let you instantly share your LinkedIn, Instagram, resume, portfolio — or all of them — with a single tap on any phone.</p>
       <div class="hero-btns">
@@ -368,7 +368,7 @@
           <li>1 NFC smart card</li>
           <li>1 direct link (LinkedIn, IG, resume, etc.)</li>
           <li>Black or White</li>
-          <li>Campus pickup / meetup</li>
+          <li>Pickup / delivery available</li>
         </ul>
         <a href="#order" class="btn btn-outline" onclick="selectPackage('basic')">Get Basic →</a>
       </div>
@@ -383,7 +383,7 @@
           <li>Multi-link profile (up to 10 links)</li>
           <li>Custom Linktree-style page</li>
           <li>Black or White</li>
-          <li>Campus pickup / meetup</li>
+          <li>Pickup / delivery available</li>
         </ul>
         <a href="#order" class="btn btn-primary" onclick="selectPackage('premium')">Get Premium →</a>
       </div>
@@ -398,7 +398,7 @@
           <li>Multi-link profile on each (up to 10 links)</li>
           <li>Mix & match colors</li>
           <li>Best deal — share with a friend</li>
-          <li>Campus pickup / meetup</li>
+          <li>Pickup / delivery available</li>
         </ul>
         <a href="#order" class="btn btn-outline" onclick="selectPackage('duo')">Get Duo Deal →</a>
       </div>
@@ -409,7 +409,7 @@
   <section id="order">
     <div class="section-header">
       <h2>Place Your Order</h2>
-      <p>Fill out the form below and we'll get your card ready for pickup on campus.</p>
+      <p>Fill out the form below and we'll get your card ready for pickup or delivery.</p>
     </div>
     <div class="form-container">
       <form id="orderForm" onsubmit="handleSubmit(event)">
@@ -418,7 +418,7 @@
         <div class="form-section-title">👤 Your Info</div>
         <div class="form-group">
           <label for="name">Full Name *</label>
-          <input type="text" id="name" name="name" placeholder="e.g. Marcus Johnson" required />
+          <input type="text" id="name" name="name" placeholder="e.g. Alex Rivera" required />
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -428,7 +428,7 @@
           <div class="form-group">
             <label for="contact">Phone or Instagram *</label>
             <span class="hint">Best way to reach you for pickup</span>
-            <input type="text" id="contact" name="contact" placeholder="@yourhandle or (850) 555-1234" required />
+            <input type="text" id="contact" name="contact" placeholder="@yourhandle or (555) 123-4567" required />
           </div>
         </div>
 
@@ -481,14 +481,13 @@
         <div class="form-section-title">📍 Pickup & Payment</div>
         <div class="form-row">
           <div class="form-group">
-            <label for="pickup">Pickup Location *</label>
+            <label for="pickup">Pickup / Delivery Option *</label>
             <select id="pickup" name="pickup" required>
               <option value="" disabled selected>Choose…</option>
-              <option value="strozier">Strozier Library</option>
-              <option value="dirac">Dirac Science Library</option>
-              <option value="union">FSU Student Union</option>
-              <option value="dorm">Dorm / Greek House</option>
-              <option value="other">Other / Flexible</option>
+              <option value="local_pickup">Local Pickup (details in notes)</option>
+              <option value="meetup">Campus / Local Meetup</option>
+              <option value="mail">Mail / Shipping (details in notes)</option>
+              <option value="flexible">Other / Flexible</option>
             </select>
           </div>
           <div class="form-group">
@@ -530,14 +529,14 @@
     <div class="modal">
       <div class="check">✓</div>
       <h3>Order Submitted! 🎉</h3>
-      <p>We got your order and will reach out soon to confirm payment and schedule your campus pickup. Check your email / DMs!</p>
+      <p>We got your order and will reach out soon to confirm payment and arrange your pickup or delivery. Check your email / DMs!</p>
       <a href="#" class="btn btn-primary" onclick="closeModal()">Done</a>
     </div>
   </div>
 
   <!-- ═══ Footer ═══ -->
   <footer>
-    <p>© 2026 TapFSU — NFC Smart Cards for FSU Students</p>
+    <p>© 2026 TapdCard — Smart NFC Business & Social Cards</p>
   </footer>
 
   <script>
