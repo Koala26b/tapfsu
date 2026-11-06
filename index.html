@@ -238,6 +238,58 @@
       letter-spacing: 0.08em; color: var(--gold); margin-bottom: 1.25rem;
     }
 
+    /* links notice */
+    .links-notice {
+      background: rgba(120, 47, 64, 0.25);
+      border: 1.5px solid var(--garnet);
+      border-left: 4px solid var(--gold);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.85rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #ffe4e9;
+    }
+    .links-notice strong { color: var(--gold); }
+    .links-notice code {
+      background: rgba(0,0,0,0.5);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--white);
+      font-size: 0.82rem;
+    }
+
+    /* headshot photo field styling */
+    .headshot-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1.5px dashed var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 0.2s;
+    }
+    .headshot-box:focus-within { border-color: var(--gold); }
+    .file-input-wrapper input[type="file"] {
+      padding: 0.6rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .file-selected-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.85rem;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: 8px;
+      color: var(--success);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
     /* order summary */
     .order-summary {
       background: rgba(206,184,136,0.06); border: 1px solid rgba(206,184,136,0.15);
@@ -467,12 +519,42 @@
 
         <hr class="form-divider" />
 
+        <!-- Headshot Photo -->
+        <div class="form-section-title">📸 Professional Headshot Photo</div>
+        <div class="form-group">
+          <label for="headshotUrl">Professional Headshot Photo *</label>
+          <span class="hint">Upload your headshot image file OR paste a shareable link (Google Drive, iCloud, Dropbox, or LinkedIn photo).</span>
+          <div class="headshot-box">
+            <input type="text" id="headshotUrl" name="headshotUrl" placeholder="Paste photo link: Google Drive, iCloud, Dropbox, LinkedIn, etc." />
+            <div style="display:flex; align-items:center; gap:0.75rem; color:var(--text-muted); font-size:0.78rem; font-weight:700; letter-spacing:0.05em;">
+              <span style="flex:1; height:1px; background:var(--card-border);"></span>
+              <span>OR UPLOAD IMAGE FILE</span>
+              <span style="flex:1; height:1px; background:var(--card-border);"></span>
+            </div>
+            <div class="file-input-wrapper">
+              <input type="file" id="headshotFile" accept="image/*" />
+            </div>
+            <div id="headshotFileStatus" style="display:none;" class="file-selected-badge">
+              ✓ <span id="headshotFileName">Photo selected</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="form-divider" />
+
         <!-- Links -->
         <div class="form-section-title">🔗 Links to Encode</div>
         <div class="form-group">
           <label for="links">Your Link(s) *</label>
-          <span class="hint" id="linksHint">Paste the URL you want your card to open when tapped.</span>
-          <textarea id="links" name="links" placeholder="https://linkedin.com/in/yourprofile" required></textarea>
+          
+          <div class="links-notice">
+            ⚠️ <strong>STRICT REQUIREMENT: ONLY LINKS / URLs — NOTHING ELSE!</strong><br />
+            • <strong>Do NOT</strong> write personal bios, text descriptions, resumes, or phone numbers here.<br />
+            • <strong>ONLY</strong> paste complete web links (e.g. <code>https://linkedin.com/in/...</code> or <code>https://instagram.com/...</code>).
+          </div>
+
+          <span class="hint" id="linksHint" style="color:var(--gold-light); font-weight:600;">Paste only valid website URLs (starting with https://).</span>
+          <textarea id="links" name="links" rows="4" placeholder="https://linkedin.com/in/yourprofile&#10;https://instagram.com/yourhandle&#10;&#10;(Only web links here — no bios or plain text!)" required></textarea>
         </div>
 
         <hr class="form-divider" />
@@ -507,6 +589,11 @@
           <input type="text" id="payHandle" name="payHandle" placeholder="@yourvenmo" required />
         </div>
         <div class="form-group">
+          <label for="referral">Referral Link / Code (optional)</label>
+          <span class="hint">Were you referred by a friend, campus ambassador, or have a promo code? Enter their name, link, or code here.</span>
+          <input type="text" id="referral" name="referral" placeholder="e.g. Alex Rivera, @ambassador, or promo code" />
+        </div>
+        <div class="form-group">
           <label for="notes">Special Requests (optional)</label>
           <textarea id="notes" name="notes" rows="3" placeholder="Anything else we should know?"></textarea>
         </div>
@@ -530,6 +617,9 @@
       <div class="check">✓</div>
       <h3>Order Submitted! 🎉</h3>
       <p>We got your order and will reach out soon to confirm payment and arrange your pickup or delivery. Check your email / DMs!</p>
+      <div style="margin: 0 auto 1.5rem; padding: 0.85rem 1rem; background: rgba(206,184,136,0.08); border: 1px dashed var(--gold); border-radius: 10px; font-size: 0.85rem; color: var(--gold-light); line-height: 1.4; text-align: left;">
+        🎁 <strong>Refer a friend & earn:</strong> Have your friends enter your name or link in the <strong>Referral</strong> box when ordering!
+      </div>
       <a href="#" class="btn btn-primary" onclick="closeModal()">Done</a>
     </div>
   </div>
@@ -540,6 +630,70 @@
   </footer>
 
   <script>
+    /* ── Auto-fill referral from URL parameter (e.g. tapdcard.com/?ref=Alex) ── */
+    window.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref') || urlParams.get('referral');
+      const refInput = document.getElementById('referral');
+      if (refCode && refInput) {
+        refInput.value = decodeURIComponent(refCode);
+      }
+    });
+
+    /* ── Headshot File Picker Feedback ── */
+    const headshotFileInput = document.getElementById('headshotFile');
+    const headshotFileStatus = document.getElementById('headshotFileStatus');
+    const headshotFileName = document.getElementById('headshotFileName');
+
+    if (headshotFileInput) {
+      headshotFileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          const f = this.files[0];
+          headshotFileName.textContent = f.name + ' (' + Math.round(f.size / 1024) + ' KB)';
+          headshotFileStatus.style.display = 'inline-flex';
+        } else {
+          headshotFileStatus.style.display = 'none';
+        }
+      });
+    }
+
+    /* ── Client-side Image Compression (produces lightweight base64) ── */
+    function compressImage(file, maxWidth, maxHeight, quality, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = function() {
+          callback(e.target.result);
+        };
+        img.src = e.target.result;
+      };
+      reader.onerror = function() {
+        callback('');
+      };
+      reader.readAsDataURL(file);
+    }
+
     /* ── Package select helper ── */
     function selectPackage(pkg) {
       document.getElementById('package').value = pkg;
@@ -563,15 +717,16 @@
       }
 
       if (pkg === 'basic') {
-        linksHint.textContent = 'Paste your single URL (LinkedIn, Instagram, portfolio, or resume link).';
+        linksHint.innerHTML = '⚠️ <strong>ONLY 1 LINK — NOTHING ELSE:</strong> Paste your single full URL (e.g. <code>https://linkedin.com/in/yourname</code>). No bios or text.';
         totalEl.textContent = '$5';
       } else if (pkg === 'premium') {
-        linksHint.textContent = 'Paste your Linktree URL, or list up to 10 links with labels (e.g., 1. LinkedIn: url, 2. Instagram: url).';
+        linksHint.innerHTML = '⚠️ <strong>ONLY LINKS — NOTHING ELSE:</strong> Paste your Linktree URL or list up to 10 full URLs (one per line). No bios, resumes, or text descriptions.';
         totalEl.textContent = '$7';
       } else if (pkg === 'duo') {
-        linksHint.textContent = 'Paste your Linktree URL, or list up to 10 links with labels. Both cards will share the same link set.';
+        linksHint.innerHTML = '⚠️ <strong>ONLY LINKS — NOTHING ELSE:</strong> Paste your Linktree URL or list up to 10 full URLs (one per line). Both cards share this link set.';
         totalEl.textContent = '$10';
       } else {
+        linksHint.innerHTML = 'Paste only valid website URLs (starting with https://).';
         totalEl.textContent = '$0';
       }
     }
@@ -584,42 +739,78 @@
 
       const form = document.getElementById('orderForm');
       const submitBtn = form.querySelector('.submit-btn');
-      const data = new FormData(form);
-      const entries = Object.fromEntries(data.entries());
+      const headshotUrl = document.getElementById('headshotUrl').value.trim();
+      const file = headshotFileInput && headshotFileInput.files ? headshotFileInput.files[0] : null;
+
+      // Validate headshot is provided
+      if (!headshotUrl && !file) {
+        alert('Please provide your Professional Headshot Photo by either pasting a link or choosing an image file!');
+        document.getElementById('headshotUrl').focus();
+        return;
+      }
+
+      // Validate links field contains valid URLs only (strict check)
+      const linksVal = document.getElementById('links').value.trim();
+      if (!linksVal.includes('.') && !linksVal.toLowerCase().includes('http')) {
+        alert('The Links section must contain website links (URLs) only — nothing else!\n\nPlease paste full web links (e.g., https://linkedin.com/in/yourname). Do not include personal bios, resumes, or descriptions.');
+        document.getElementById('links').focus();
+        return;
+      }
 
       // Disable button while sending
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
 
-      // Create a temporary hidden form that POSTs to the iframe
-      var tempForm = document.createElement('form');
-      tempForm.method = 'POST';
-      tempForm.action = SCRIPT_URL;
-      tempForm.target = 'hidden_iframe';
-      tempForm.style.display = 'none';
-
-      // Add all form data as hidden inputs
-      for (var key in entries) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = entries[key];
-        tempForm.appendChild(input);
+      // If a file was selected, compress it first, then send
+      if (file) {
+        compressImage(file, 800, 800, 0.75, function(base64Data) {
+          sendFormData(base64Data, file.name);
+        });
+      } else {
+        sendFormData('', '');
       }
 
-      document.body.appendChild(tempForm);
-      tempForm.submit();
-      document.body.removeChild(tempForm);
+      function sendFormData(headshotBase64, fileName) {
+        const data = new FormData(form);
+        const entries = Object.fromEntries(data.entries());
 
-      // Show success after a short delay (iframe POST has no callback)
-      setTimeout(function() {
-        document.getElementById('successModal').classList.add('active');
-        form.reset();
-        document.getElementById('orderTotal').textContent = '$0';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Order 🚀';
-        updateForm();
-      }, 1500);
+        // Attach headshot data
+        entries.headshotUrl = headshotUrl;
+        entries.headshotFileName = fileName || '';
+        entries.headshotData = headshotBase64 || '';
+        entries.headshot = headshotUrl || (fileName ? ('Uploaded: ' + fileName) : '');
+
+        // Create a temporary hidden form that POSTs to the iframe
+        var tempForm = document.createElement('form');
+        tempForm.method = 'POST';
+        tempForm.action = SCRIPT_URL;
+        tempForm.target = 'hidden_iframe';
+        tempForm.style.display = 'none';
+
+        // Add all form data as hidden inputs
+        for (var key in entries) {
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = entries[key];
+          tempForm.appendChild(input);
+        }
+
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        document.body.removeChild(tempForm);
+
+        // Show success after a short delay (iframe POST has no callback)
+        setTimeout(function() {
+          document.getElementById('successModal').classList.add('active');
+          form.reset();
+          if (headshotFileStatus) headshotFileStatus.style.display = 'none';
+          document.getElementById('orderTotal').textContent = '$0';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Order 🚀';
+          updateForm();
+        }, 1500);
+      }
     }
 
     function closeModal() {
