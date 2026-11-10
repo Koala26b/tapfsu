@@ -238,27 +238,6 @@
       letter-spacing: 0.08em; color: var(--gold); margin-bottom: 1.25rem;
     }
 
-    /* links notice */
-    .links-notice {
-      background: rgba(120, 47, 64, 0.25);
-      border: 1.5px solid var(--garnet);
-      border-left: 4px solid var(--gold);
-      border-radius: 10px;
-      padding: 0.9rem 1.1rem;
-      margin-bottom: 0.85rem;
-      font-size: 0.85rem;
-      line-height: 1.5;
-      color: #ffe4e9;
-    }
-    .links-notice strong { color: var(--gold); }
-    .links-notice code {
-      background: rgba(0,0,0,0.5);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: var(--white);
-      font-size: 0.82rem;
-    }
-
     /* headshot photo field styling */
     .headshot-box {
       background: rgba(255, 255, 255, 0.02);
@@ -520,10 +499,10 @@
         <hr class="form-divider" />
 
         <!-- Headshot Photo -->
-        <div class="form-section-title">📸 Professional Headshot Photo</div>
+        <div class="form-section-title">📸 Headshot Photo</div>
         <div class="form-group">
-          <label for="headshotUrl">Professional Headshot Photo *</label>
-          <span class="hint">Upload your headshot image file OR paste a shareable link (Google Drive, iCloud, Dropbox, or LinkedIn photo).</span>
+          <label for="headshotUrl">Headshot Photo (optional)</label>
+          <span class="hint">Upload a photo file or paste a shareable link (Google Drive, Dropbox, iCloud, or LinkedIn).</span>
           <div class="headshot-box">
             <input type="text" id="headshotUrl" name="headshotUrl" placeholder="Paste photo link: Google Drive, iCloud, Dropbox, LinkedIn, etc." />
             <div style="display:flex; align-items:center; gap:0.75rem; color:var(--text-muted); font-size:0.78rem; font-weight:700; letter-spacing:0.05em;">
@@ -546,15 +525,8 @@
         <div class="form-section-title">🔗 Links to Encode</div>
         <div class="form-group">
           <label for="links">Your Link(s) *</label>
-          
-          <div class="links-notice">
-            ⚠️ <strong>STRICT REQUIREMENT: ONLY LINKS / URLs — NOTHING ELSE!</strong><br />
-            • <strong>Do NOT</strong> write personal bios, text descriptions, resumes, or phone numbers here.<br />
-            • <strong>ONLY</strong> paste complete web links (e.g. <code>https://linkedin.com/in/...</code> or <code>https://instagram.com/...</code>).
-          </div>
-
-          <span class="hint" id="linksHint" style="color:var(--gold-light); font-weight:600;">Paste only valid website URLs (starting with https://).</span>
-          <textarea id="links" name="links" rows="4" placeholder="https://linkedin.com/in/yourprofile&#10;https://instagram.com/yourhandle&#10;&#10;(Only web links here — no bios or plain text!)" required></textarea>
+          <span class="hint" id="linksHint">Paste the URL(s) you want your card to open (e.g. LinkedIn, Instagram, Linktree).</span>
+          <textarea id="links" name="links" rows="3" placeholder="https://linkedin.com/in/yourprofile&#10;https://instagram.com/yourhandle" required></textarea>
         </div>
 
         <hr class="form-divider" />
@@ -594,7 +566,7 @@
           <input type="text" id="referral" name="referral" placeholder="e.g. Alex Rivera, @ambassador, or promo code" />
         </div>
         <div class="form-group">
-          <label for="notes">Special Requests (optional)</label>
+          <label for="notes">Notes (optional)</label>
           <textarea id="notes" name="notes" rows="3" placeholder="Anything else we should know?"></textarea>
         </div>
 
@@ -717,16 +689,16 @@
       }
 
       if (pkg === 'basic') {
-        linksHint.innerHTML = '⚠️ <strong>ONLY 1 LINK — NOTHING ELSE:</strong> Paste your single full URL (e.g. <code>https://linkedin.com/in/yourname</code>). No bios or text.';
+        linksHint.textContent = 'Paste your single URL (LinkedIn, Instagram, portfolio, or resume link).';
         totalEl.textContent = '$5';
       } else if (pkg === 'premium') {
-        linksHint.innerHTML = '⚠️ <strong>ONLY LINKS — NOTHING ELSE:</strong> Paste your Linktree URL or list up to 10 full URLs (one per line). No bios, resumes, or text descriptions.';
+        linksHint.textContent = 'Paste your Linktree URL or list up to 10 links (one per line).';
         totalEl.textContent = '$7';
       } else if (pkg === 'duo') {
-        linksHint.innerHTML = '⚠️ <strong>ONLY LINKS — NOTHING ELSE:</strong> Paste your Linktree URL or list up to 10 full URLs (one per line). Both cards share this link set.';
+        linksHint.textContent = 'Paste your Linktree URL or list up to 10 links (both cards share this link set).';
         totalEl.textContent = '$10';
       } else {
-        linksHint.innerHTML = 'Paste only valid website URLs (starting with https://).';
+        linksHint.textContent = 'Paste the URL(s) you want your card to open.';
         totalEl.textContent = '$0';
       }
     }
@@ -742,17 +714,10 @@
       const headshotUrl = document.getElementById('headshotUrl').value.trim();
       const file = headshotFileInput && headshotFileInput.files ? headshotFileInput.files[0] : null;
 
-      // Validate headshot is provided
-      if (!headshotUrl && !file) {
-        alert('Please provide your Professional Headshot Photo by either pasting a link or choosing an image file!');
-        document.getElementById('headshotUrl').focus();
-        return;
-      }
-
-      // Validate links field contains valid URLs only (strict check)
+      // Validate links field contains a link
       const linksVal = document.getElementById('links').value.trim();
       if (!linksVal.includes('.') && !linksVal.toLowerCase().includes('http')) {
-        alert('The Links section must contain website links (URLs) only — nothing else!\n\nPlease paste full web links (e.g., https://linkedin.com/in/yourname). Do not include personal bios, resumes, or descriptions.');
+        alert('Please enter a valid website link (e.g. https://linkedin.com/in/yourname).');
         document.getElementById('links').focus();
         return;
       }
